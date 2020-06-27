@@ -46,18 +46,20 @@ export default function Login() {
         <div className="container">
             <div className="row mb-5">
                 <div className="col-lg-12 text-center">
-                    <h1 className="mt-5">Login</h1>
+                    <h1 className="mt-5" data-testid="login">Login</h1>
                 </div>
             </div>
             <div className="row">
                 <div className="col-lg-12">
-                    <form className="login-form mx-auto" onSubmit={handleSubmit}>
+                    <form className="login-form mx-auto" onSubmit={handleSubmit} data-testid="form">
                         <form-group controlId="formUserame">
                             <p className="input-control">
                                 <label htmlFor="username">Username or Email:</label>
                                 <input className="field"
                                     type="text"
                                     name="username"
+                                    aria-label="username"
+                                    aria-invalid="false"
                                     placeholder="Username or Email"
                                     required
                                 />
@@ -70,6 +72,8 @@ export default function Login() {
                                 <input className="field"
                                     type="password"
                                     name="password"
+                                    aria-label="password"
+                                    aria-invalid="true"
                                     placeholder="Password"
                                     required
                                 />

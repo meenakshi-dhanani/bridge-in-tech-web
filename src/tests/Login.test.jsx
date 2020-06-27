@@ -25,8 +25,6 @@ beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
-
-
 it('allows the user to login successfully', async () => {
     render(<Login />)
 
@@ -107,3 +105,43 @@ it('handles wrong credentials', async () => {
     
     expect(screen.getByLabelText('errorMessage')).toHaveTextContent("The server is currently unavailable. Try again later")
   })
+
+// https://medium.com/better-programming/developing-a-client-side-testing-strategy-fdc2886f4acb
+describe("Login render Page", () => {
+    it('renders the Login page', () => {
+        render(<Login/>);
+        expect(screen.getByTestId('login')).toBeInTheDocument();
+        });
+
+    it('render password and username input components', () => {
+        render(<Login/>);
+        expect(screen.getByLabelText('username')).toBeInTheDocument();
+        expect(screen.getByLabelText('password')).toBeInTheDocument();
+    });
+
+    it('renders a submit button', () => {
+        render(<Login/>);
+        expect(screen.getByRole('button', {name: 'Login'})).toBeInTheDocument();
+    });
+
+});
+
+describe("Form behaviour",  () => {
+    it('validate user inputs, and provides error messages', async () => {
+      render(<Login/>)
+  
+      await act (async () => {
+        fireEvent.change(screen.getByLabelText(/username/i), {
+          target: {value: ''},
+        });
+  
+        fireEvent.change(screen.getByLabelText(/password/i), {
+          target: {value: ''},
+        })
+      });
+  
+      await act (async () => {
+        fireEvent.submit(screen.getByTestId('form'))
+      });
+    });
+//       // https://github.com/testing-library/jest-dom
