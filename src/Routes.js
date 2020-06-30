@@ -1,15 +1,86 @@
-import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import React, { useState } from "react";
+import { 
+  BrowserRouter as Router, 
+  Switch, 
+  Route, 
+  Redirect, 
+  useLocation,
+  useHistory 
+} from "react-router-dom";
 import Home from "./Home";
 import Register from "./register/Register";
-import Login from "./login/Login";
+// import { Login } from "./login/Login";
 import MySpace from "./myspace/MySpace";
 import { Navbar, Nav } from "react-bootstrap";
 
+const authUser = {
+  isAuthenticated: false,
+  authenticate(cb) {
+    this.isAuthenticated = true
+    setTimeout(cb, 100)
+  },
+  signout(cb) {
+    this.isAuthenticated = false
+    setTimeout(cb, 100)
+  }
+}
+
+function Login() {
+  const [redirectToReferrer, setRedirectToReferrer] = useState(false);
+
+  const { state } = useLocation()
+
+  const login = () => 
+    authUser.authenticate(() => {
+      setRedirectToReferrer(true)
+    })
+
+  if (redirectToReferrer === true) {
+    return <Redirect to={state?.from || '/'} />
+  }
+  
+return (
+    <div>
+      <p>You must log in to view the page</p>
+      <button onClick={login}>Log in</button>
+    </div>
+  )
+  
+}
+    
+function PrivateRoute ({ children, ...rest }) {
+  return (
+    <Route {...rest} render={({ location }) => {
+      return authUser.isAuthenticated === true
+        ? children
+        : <Redirect to={{
+            pathname: '/login',
+            state: { from: location }
+          }} />
+    }} />
+  )
+}
+
+function AuthButton () {
+  const history = useHistory()
+
+  return authUser.isAuthenticated === true
+    ? 
+    <div>
+        <p>
+            Welcome! <button onClick={() => {
+            authUser.signout(() => history.push('/'))
+            }}>Sign out</button>
+        </p>
+    </div>
+    : 
+    <div><p>You are not logged in.</p></div>
+}
 
 export default (
-  <BrowserRouter>
+  <Router>
     <div>
+      
       <Navbar bg="light" expand="lg">
         <Navbar.Brand href="/">
             <img
@@ -31,12 +102,13 @@ export default (
             </Nav>
           </Navbar.Collapse>
       </Navbar>
+      <AuthButton />
       <Switch>
       <Route exact path="/" component={Home} />
         <Route path="/register" component={Register} />
         <Route path="/login" component={Login} />
-        <Route path="/my-space" component={MySpace} />
+        <PrivateRoute path="/my-space" component={MySpace} />
       </Switch>
     </div>
-  </BrowserRouter>
+  </Router>
 );
