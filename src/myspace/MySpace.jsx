@@ -3,9 +3,10 @@ import React from "react";
 export default function MySpace() {
     return (
         <div className="container-fluid" id="myspace">
+          {/* <p>Logged in status: {user.toString()}</p> */}
           <div className="top">
             <h1>
-              This will be the Member Portfolio page
+              This will be Private page for the Member's Portfolio
             </h1>
           </div>
           <div className="middle">
@@ -19,5 +20,3 @@ export default function MySpace() {
         </div>
     )
 }
-
-
