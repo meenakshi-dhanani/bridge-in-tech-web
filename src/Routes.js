@@ -31,13 +31,13 @@ export default function Routes() {
           <ProtectedRoute exact path="/members">
             <Members />
           </ProtectedRoute>
-          <ProtectedRoute path="/member">
+          <ProtectedRoute path="/members/">
             <MemberProfile />
           </ProtectedRoute>
           <ProtectedRoute exact path="/organizations">
             <Organizations />
           </ProtectedRoute>
-          <ProtectedRoute path="/organization">
+          <ProtectedRoute path="/organizations/">
             <OtherOrganizationProfile />
           </ProtectedRoute>
           <ProtectedRoute
