@@ -85,7 +85,7 @@ export default function Navigation() {
                         <Accordion>
                             <Card>
                                 <Card.Header>
-                                    <Accordion.Toggle as={Link} to="/organization-portfolio" eventKey="0">MyOrganization</Accordion.Toggle>
+                                    <Accordion.Toggle as={Link} to="/organization-profile" eventKey="0">MyOrganization</Accordion.Toggle>
                                 </Card.Header>
                                 <Accordion.Collapse eventKey="0">
                                     <Nav>

@@ -3,7 +3,8 @@ import { AuthContext } from "../AuthContext";
 import { BASE_API } from "../config";
 import "./Organization.css";
 import { SERVICE_UNAVAILABLE_ERROR } from "../messages";
-import { TIMEZONES, STATUS } from "../enums";
+import { ORGANIZATION_STATUS } from "../enums";
+import { TIMEZONES } from "../timezones";
 
 export default function OrganizationProfile() {
   const [responseMessage, setResponseMessage] = useState(null);
@@ -25,8 +26,11 @@ export default function OrganizationProfile() {
     fetch(`${BASE_API}/organization`, requestOrganizationProfile)
       .then(async response => {
         const data = await response.json();
-        if (response.ok)
+        if (response.ok){
+          localStorage.setItem("organization", JSON.stringify(data));
+          console.log(localStorage.getItem("organization"));
           return setOrganizationProfile(data);
+        }
         return setResponseMessage(data.message);
       })
       .catch(() =>
@@ -69,7 +73,7 @@ export default function OrganizationProfile() {
   };
   
   const optionsWithDefaultSelection = (value, receivedValue) => {
-    if (value === "UTC+00:00/Greenwich Mean Time and Western European Time" && !receivedValue){
+    if (value === "GMT0" && !receivedValue){
       return <option key={value} value={value} selected>{value}</option>
     }
     if (value === "Draft" && !receivedValue){
@@ -182,7 +186,7 @@ export default function OrganizationProfile() {
                   <label htmlFor="timezone">Timezone</label>
                   <select className="custom-select" name="timezone" id="timezone">
                     <option 
-                    defaultValue="UTC+00:00/Greenwich Mean Time and Western European Time">{organizationProfile.timezone}
+                    defaultValue="GMT0">{organizationProfile.timezone}
                     </option>
                       {TIMEZONES.map((timezone) => optionsWithDefaultSelection(timezone, organizationProfile.timezone))}
                   </select>
@@ -213,11 +217,23 @@ export default function OrganizationProfile() {
                     <option 
                     defaultValue="Draft">{organizationProfile.status}
                     </option>
-                      {STATUS.map((status) => optionsWithDefaultSelection(status, organizationProfile.status))}
+                      {ORGANIZATION_STATUS.map((status) => optionsWithDefaultSelection(status, organizationProfile.status))}
                   </select>
                 </p>
               </div>
-              
+              <div><br></br></div>
+              <form-group controlId="formJoinDate">
+                <p className="input-control">
+                  <label id="joinDate">Join date :</label>
+                  <input className="field"
+                    type="url"
+                    aria-labelledby="joinDate"
+                    name="joinDate"
+                    defaultValue={organizationProfile.join_date}
+                    disabled
+                  />
+                </p>
+              </form-group>
               <div><br></br></div>
               <div>
                   {responseMessage && <span className="error" name="response" aria-label="response" role="alert">{responseMessage}</span>}
